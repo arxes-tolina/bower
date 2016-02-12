@@ -2,7 +2,7 @@
 
 > Bower needs resources for its maintenance. Please fill [this form](https://docs.google.com/forms/d/1i-Opb-uPdqUBBZQSbngv3Y3bfolG1gbBvtRLfxMnzRE/viewform?c=0&w=1) if you think you can help.
 
-[![Build Status](https://travis-ci.org/bower/bower.svg?branch=master)](https://travis-ci.org/bower/bower)
+[![Build Status](https://travis-ci.org/arxes-tolina/bower.svg?branch=master)](https://travis-ci.org/arxes-tolina/bower)
 [![Windows Build](https://ci.appveyor.com/api/projects/status/jr6vfra8w84plh2g/branch/master?svg=true)](https://ci.appveyor.com/project/sheerun/bower/history)
 [![Coverage Status](https://img.shields.io/coveralls/bower/bower.svg)](https://coveralls.io/r/bower/bower?branch=master)
 [![Discord chat](https://img.shields.io/badge/discord-join%20chat%20%E2%86%92-brightgreen.svg?style=flat)](https://discord.gg/0fFM7QF0KpZRh2cY)
