@@ -1,6 +1,6 @@
 # Bower
 
-[![Build Status](https://travis-ci.org/bower/bower.svg?branch=master)](https://travis-ci.org/bower/bower) [![Coverage Status](https://coveralls.io/repos/bower/bower/badge.png?branch=master)](https://coveralls.io/r/bower/bower?branch=master)
+[![Build Status](https://travis-ci.org/arxes-tolina/bower.svg?branch=bo2)](https://travis-ci.org/arxes-tolina/bower) [![Coverage Status](https://coveralls.io/repos/bower/bower/badge.png?branch=master)](https://coveralls.io/r/bower/bower?branch=master)
 
 <img align="right" height="300" src="http://bower.io/img/bower-logo.png">
 
