@@ -41,9 +41,6 @@ module.exports = function (grunt) {
             },
             cover: {
                 command: 'STRICT_REQUIRE=1 node node_modules/istanbul/lib/cli.js cover --dir ./test/reports node_modules/mocha/bin/_mocha -- -R dot test/test.js'
-            },
-            coveralls: {
-                command: 'node node_modules/.bin/coveralls < test/reports/lcov.info'
             }
         },
         watch: {
