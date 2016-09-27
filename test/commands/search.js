@@ -6,23 +6,27 @@ var search = helpers.command('search');
 
 describe('bower search', function () {
 
-    it('correctly reads arguments', function() {
+    it('correctly reads arguments', function () {
         expect(search.readOptions(['jquery']))
         .to.eql(['jquery']);
     });
 
     it('searches for single repository', function () {
-        return Q.Promise(function(resolve) {
+        return Q.Promise(function (resolve) {
             var search = helpers.command('search', {
-                'bower-registry-client': function() {
+                '../core/PackageRepository': function () {
                     return {
-                        search: resolve
-                    };
+                        getRegistryClient: function () {
+                            return {
+                                search: resolve
+                            };
+                        }
+                    }
                 }
             });
 
             helpers.run(search, ['jquery'], {});
-        }).then(function(query) {
+        }).then(function (query) {
             expect(query).to.be('jquery');
         });
     });
@@ -30,12 +34,16 @@ describe('bower search', function () {
     it('lists all repositories when no query given in non-interactive mode', function () {
         var nonInteractiveConfig = { interactive: false };
 
-        return Q.Promise(function(resolve) {
+        return Q.Promise(function (resolve) {
             var search = helpers.command('search', {
-                'bower-registry-client': function() {
+                '../core/PackageRepository': function () {
                     return {
-                        list: resolve
-                    };
+                        getRegistryClient: function () {
+                            return {
+                                list: resolve
+                            };
+                        }
+                    }
                 }
             });
 
@@ -47,15 +55,19 @@ describe('bower search', function () {
         var interactiveConfig = { interactive: true, json: true };
 
         var search = helpers.command('search', {
-            'bower-registry-client': function() {
+            '../core/PackageRepository': function () {
                 return {
-                    list: function (cb) { return cb(null, 'foobar'); }
-                };
+                    getRegistryClient: function () {
+                        return {
+                            list: function (cb) { return cb(null, 'foobar'); }
+                        };
+                    }
+                }
             }
         });
 
         return helpers.run(search, [null, interactiveConfig])
-        .spread(function(result) {
+        .spread(function (result) {
             expect(result).to.be('foobar');
         });
     });
@@ -64,19 +76,23 @@ describe('bower search', function () {
         var interactiveConfig = { interactive: true };
 
         var search = helpers.command('search', {
-            'bower-registry-client': function() {
+            '../core/PackageRepository': function () {
                 return {
-                    list: function() { throw 'list called'; },
-                    search: function() { throw 'search called'; }
-                };
+                    getRegistryClient: function () {
+                        return {
+                            list: function () { throw 'list called'; },
+                            search: function () { throw 'search called'; }
+                        };
+                    }
+                }
             }
         });
 
         return helpers.run(search, [null, interactiveConfig])
-        .then(function(commandResult) {
+        .then(function (commandResult) {
             expect().fail('should fail');
         })
-        .catch(function(e) {
+        .catch(function (e) {
             expect(e.code).to.be('EREADOPTIONS');
         });
     });

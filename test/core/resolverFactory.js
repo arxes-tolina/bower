@@ -360,7 +360,7 @@ describe('resolverFactory', function () {
         mout.object.forOwn(endpoints, function (value, key) {
             // Test without name
             promise = promise.then(function () {
-                return callFactory({ source: key} , { cwd: cwd });
+                return callFactory({ source: key}, { cwd: cwd });
             })
             .then(function (resolver) {
                 expect(resolver).to.be.a(resolvers.Bo2);
@@ -384,7 +384,7 @@ describe('resolverFactory', function () {
     });
 
     if (!helpers.hasSvn())
-        describe.skip('should recognize svn remote endpoints correctly', function() {});
+        describe.skip('should recognize svn remote endpoints correctly', function () {});
     else it('should recognize svn remote endpoints correctly', function (next) {
         var promise = Q.resolve();
         var endpoints;
