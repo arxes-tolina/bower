@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
@@ -14,13 +15,30 @@ module.exports = function (grunt) {
                 'test/**/*.js',
                 '!test/assets/**/*',
                 '!test/reports/**/*',
+                '!test/sample/**/*',
+                '!test/tmp/**/*'
+            ]
+        },
+        jscs: {
+            options: {
+                config: '.jscsrc',
+                fix: true
+            },
+            files: [
+                'Gruntfile.js',
+                'bin/*',
+                'lib/**/*.js',
+                'test/**/*.js',
+                '!test/assets/**/*',
+                '!test/reports/**/*',
+                '!test/sample/**/*',
                 '!test/tmp/**/*'
             ]
         },
         simplemocha: {
             options: {
                 reporter: 'spec',
-                timeout: '5000'
+                timeout: '15000'
             },
             full: {
                 src: ['test/test.js']
@@ -40,7 +58,7 @@ module.exports = function (grunt) {
                 command: 'node test/packages.js --force && node test/packages-svn.js --force'
             },
             cover: {
-                command: 'STRICT_REQUIRE=1 node node_modules/istanbul/lib/cli.js cover --dir ./test/reports node_modules/mocha/bin/_mocha -- -R dot test/test.js'
+                command: 'node node_modules/istanbul/lib/cli.js cover --dir ./test/reports node_modules/mocha/bin/_mocha -- --timeout 30000 -R dot test/test.js'
             }
         },
         watch: {
@@ -50,7 +68,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('assets', ['exec:assets-force']);
-    grunt.registerTask('test', ['jshint', 'exec:assets', 'simplemocha:full']);
+    grunt.registerTask('test', ['jscs', 'jshint', 'exec:assets', 'simplemocha:full']);
     grunt.registerTask('cover', 'exec:cover');
     grunt.registerTask('travis', ['jshint', 'exec:assets', 'exec:cover']);
     grunt.registerTask('default', 'test');

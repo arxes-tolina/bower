@@ -9,4 +9,5 @@
 /bower.json
 /component.json
 /bower_components
-.idea
+/test/sample
+!/test/sample/bower.json
