@@ -25,9 +25,10 @@ describe('scripts', function () {
     var config = {
         cwd: tempDir,
         scripts: {
-            preinstall: touch('preinstall_%'),
-            postinstall: touch('postinstall_%'),
-            preuninstall: touch('preuninstall_%')
+            preinstall: touch('preinstall_%_%'),
+            postinstall: touch('postinstall_%_%'),
+            preuninstall: touch('preuninstall_%_%'),
+            postuninstall: touch('postuninstall_%_%')
         }
     };
 
@@ -45,8 +46,8 @@ describe('scripts', function () {
         .install([packageDir], undefined, config)
         .on('end', function (installed) {
 
-            expect(fs.existsSync(path.join(tempDir, 'preinstall_' + packageName))).to.be(true);
-            expect(fs.existsSync(path.join(tempDir, 'postinstall_' + packageName))).to.be(true);
+            expect(fs.existsSync(path.join(tempDir, 'preinstall_' + packageName + '_' + packageName))).to.be(true);
+            expect(fs.existsSync(path.join(tempDir, 'postinstall_' + packageName + '_' + packageName))).to.be(true);
 
             next();
         });
@@ -59,7 +60,20 @@ describe('scripts', function () {
         .uninstall([packageName], undefined, config)
         .on('end', function (installed) {
 
-            expect(fs.existsSync(path.join(tempDir, 'preuninstall_' + packageName))).to.be(true);
+            expect(fs.existsSync(path.join(tempDir, 'preuninstall_' + packageName + '_' + packageName))).to.be(true);
+
+            next();
+        });
+
+    });
+
+    it('should run postuninstall hook.', function (next) {
+
+        bower.commands
+        .uninstall([packageName], undefined, config)
+        .on('end', function (installed) {
+
+            expect(fs.existsSync(path.join(tempDir, 'postuninstall_' + packageName + '_' + packageName))).to.be(true);
 
             next();
         });

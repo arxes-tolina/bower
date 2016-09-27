@@ -1,6 +1,7 @@
-# Thanks for Grunt for template of this file!
-
 # http://www.appveyor.com/docs/appveyor-yml
+
+# Set build version format here instead of in the admin panel.
+version: "{build}"
 
 # Fix line endings in Windows. (runs before repo cloning)
 init:
@@ -11,33 +12,34 @@ environment:
   matrix:
     - nodejs_version: "0.10"
     - nodejs_version: "0.12"
+    - nodejs_version: "4.0"
+    - nodejs_version: "4.1"
+    - nodejs_version: "4.2"
     - nodejs_version: "5"
-    - nodejs_version: "4"
+    - nodejs_version: "6"
 
-# Allow failing jobs for bleeding-edge Node.js versions.
+# Finish on first failed build
 matrix:
-  allow_failures:
-    - nodejs_version: "0.10"
-    - nodejs_version: "5"
+  fast_finish: true
 
-# Install scripts. (runs after repo cloning)
+# Install node, display versions, install dependencies
 install:
-  # Get the latest stable version of Node 0.STABLE.latest
   - ps: Install-Product node $env:nodejs_version
-  # Output useful info for debugging.
-  - node --version
-  - npm --version
-  - git --version
-  - svn --version
-  # Install all dependencies
+  - node --version && npm --version
+  - git --version && svn --version
   - npm install
 
 # Post-install test scripts.
 test_script:
   - cmd: npm run ci
 
-# Don't actually build.
-build: off
+# Make clone much faster
+shallow_clone: true
 
-# Set build version format here instead of in the admin panel.
-version: "{build}"
+# Disable Visual Studio build and deploy
+build: off
+deploy: off
+
+# Cache node modules, and refresh if package.json changes
+cache:
+  - node_modules -> package.json

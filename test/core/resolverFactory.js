@@ -104,7 +104,7 @@ describe('resolverFactory', function () {
             'https://user@hostname.com/project.git/': 'https://user@hostname.com/project.git',
 
             // shorthand
-            'bower/bower': 'git://github.com/bower/bower.git'
+            'bower/bower': 'https://github.com/bower/bower.git'
         };
 
         mout.object.forOwn(endpoints, function (value, key) {
@@ -215,7 +215,7 @@ describe('resolverFactory', function () {
             'https://user@github.com/project/blah.git/': 'https://user@github.com/project/blah.git',
 
             // shorthand
-            'bower/bower': 'git://github.com/bower/bower.git'
+            'bower/bower': 'https://github.com/bower/bower.git'
         };
 
         nonGitHub = [
@@ -341,7 +341,7 @@ describe('resolverFactory', function () {
     });
 
     if (!helpers.hasSvn())
-        describe.skip('should recognize svn remote endpoints correctly', function() {});
+        describe.skip('should recognize svn remote endpoints correctly', function () {});
     else it('should recognize svn remote endpoints correctly', function (next) {
         var promise = Q.resolve();
         var endpoints;
@@ -568,7 +568,7 @@ describe('resolverFactory', function () {
         callFactory({ source: 'pure' })
         .then(function (resolver) {
             expect(resolver).to.be.a(resolvers.GitRemote);
-            expect(resolver.getSource()).to.equal('git://github.com/yui/pure-release.git');
+            expect(resolver.getSource()).to.equal('https://github.com/yui/pure-release.git');
             expect(resolver.getTarget()).to.equal('*');
         })
         .then(function () {
@@ -576,7 +576,7 @@ describe('resolverFactory', function () {
             return callFactory({ source: 'pure', name: 'foo' })
             .then(function (resolver) {
                 expect(resolver).to.be.a(resolvers.GitRemote);
-                expect(resolver.getSource()).to.equal('git://github.com/yui/pure-release.git');
+                expect(resolver.getSource()).to.equal('https://github.com/yui/pure-release.git');
                 expect(resolver.getName()).to.equal('foo');
                 expect(resolver.getTarget()).to.equal('*');
             });
@@ -622,15 +622,15 @@ describe('resolverFactory', function () {
         callFactory({ source: 'bower/bower' })
         .then(function (resolver) {
             var config = {
-                shorthandResolver: 'git://bower.io/{{owner}}/{{package}}/{{shorthand}}'
+                shorthandResolver: 'https://bower.io/{{owner}}/{{package}}/{{shorthand}}'
             };
 
-            expect(resolver.getSource()).to.equal('git://github.com/bower/bower.git');
+            expect(resolver.getSource()).to.equal('https://github.com/bower/bower.git');
 
             return callFactory({ source: 'IndigoUnited/promptly' }, config);
         })
         .then(function (resolver) {
-            expect(resolver.getSource()).to.equal('git://bower.io/IndigoUnited/promptly/IndigoUnited/promptly');
+            expect(resolver.getSource()).to.equal('https://bower.io/IndigoUnited/promptly/IndigoUnited/promptly');
             next();
         })
         .done();

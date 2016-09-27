@@ -14,6 +14,7 @@ var proxyquire = require('proxyquire').noCallThru().noPreserveCache();
 var spawnSync = require('spawn-sync');
 var config = require('../lib/config');
 var nock = require('nock');
+var semver = require('semver');
 
 // For better promise errors
 Q.longStackSupport = true;
@@ -54,8 +55,8 @@ after(function () {
     rimraf.sync(tmpLocation);
 });
 
-exports.TempDir = (function() {
-    function TempDir (defaults) {
+exports.TempDir = (function () {
+    function TempDir(defaults) {
         this.path = path.join(tmpLocation, uuid.v4());
         this.defaults = defaults;
     }
@@ -66,7 +67,7 @@ exports.TempDir = (function() {
         defaults = defaults || this.defaults || {};
         files = object.merge(files || {}, defaults);
 
-        this.meta = function(tag) {
+        this.meta = function (tag) {
             if (tag) {
                 return files[tag]['bower.json'];
             } else {
@@ -155,6 +156,20 @@ exports.TempDir = (function() {
         }
     };
 
+    TempDir.prototype.latestGitTag = function () {
+        var versions = this.git('tag')
+            .split(/\r?\n/)
+            .map(function (t) { return t[0] == 'v' ? t.slice(1) : t; })
+            .filter(semver.valid)
+            .sort(semver.compare);
+
+        if (versions.length >= 1) {
+            return versions[versions.length - 1];
+        } else {
+            throw new Error('No valid git version tags found.');
+        }
+    };
+
     TempDir.prototype.exists = function (name) {
         return fs.existsSync(path.join(this.path, name));
     };
@@ -162,7 +177,7 @@ exports.TempDir = (function() {
     return TempDir;
 })();
 
-exports.expectEvent = function expectEvent (emitter, eventName) {
+exports.expectEvent = function expectEvent(emitter, eventName) {
     var deferred = Q.defer();
 
     emitter.once(eventName, function () {
@@ -223,7 +238,7 @@ exports.run = function (command, args) {
     var logger = command.apply(null, args || []);
 
     // Hack so we can intercept prompring for data
-    logger.prompt = function(data) {
+    logger.prompt = function (data) {
         logger.emit('confirm', data);
     };
 
@@ -235,27 +250,27 @@ exports.run = function (command, args) {
 };
 
 // Captures all stdout and stderr
-exports.capture = function(callback) {
+exports.capture = function (callback) {
     var oldStdout = process.stdout.write;
     var oldStderr = process.stderr.write;
 
     var stdout = '';
     var stderr = '';
 
-    process.stdout.write = function(text) {
+    process.stdout.write = function (text) {
         stdout += text;
     };
 
-    process.stderr.write = function(text) {
+    process.stderr.write = function (text) {
         stderr += text;
     };
 
-    return Q.fcall(callback).then(function() {
+    return Q.fcall(callback).then(function () {
         process.stdout.write = oldStdout;
         process.stderr.write = oldStderr;
 
         return [stdout, stderr];
-    }).fail(function(e) {
+    }).fail(function (e) {
         process.stdout.write = oldStdout;
         process.stderr.write = oldStderr;
 
@@ -263,7 +278,7 @@ exports.capture = function(callback) {
     });
 };
 
-exports.hasSvn = function() {
+exports.hasSvn = function () {
     try {
         which.sync('svn');
         return true;
@@ -272,7 +287,7 @@ exports.hasSvn = function() {
     }
 };
 
-exports.isWin = function() {
+exports.isWin = function () {
     return process.platform === 'win32';
 };
 
