@@ -21,6 +21,7 @@ require('./core/resolvers/gitFsResolver');
 require('./core/resolvers/gitRemoteResolver');
 require('./core/resolvers/gitHubResolver');
 require('./core/resolvers/svnResolver');
+require('./core/resolvers/bo2Resolver');
 require('./core/resolverFactory');
 require('./core/resolveCache');
 require('./core/packageRepository');

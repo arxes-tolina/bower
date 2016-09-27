@@ -133,9 +133,7 @@
   ],
   "scripts": {
     "test": "grunt test",
-    "ci": "grunt travis",
-    "coveralls": "coveralls",
-    "prepublish": "in-publish && grunt prepublish || not-in-publish"
+    "ci": "grunt travis"
   },
   "bin": "bin/bower",
   "files": [

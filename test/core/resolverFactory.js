@@ -340,6 +340,49 @@ describe('resolverFactory', function () {
         .done();
     });
 
+    it('should recognize bo2 endpoints correctly', function (next) {
+        var promise = Q.resolve();
+        var endpoints;
+        var testPackage;
+        var cwd;
+
+        testPackage = path.resolve(__dirname, '../assets/package-bo2');
+        cwd = path.resolve(testPackage, 'repo/TestClients/TCbo2.Web.Telefon.Liste.Agent');
+
+        endpoints = {
+            // bo2:
+            'bo2://bo2.Core.Web.Ui': 'bo2://bo2.Core.Web.Ui',
+
+            // bo2@:
+            'bo2@bo2.Core.Web.Ui': 'bo2@bo2.Core.Web.Ui'
+        };
+
+        mout.object.forOwn(endpoints, function (value, key) {
+            // Test without name
+            promise = promise.then(function () {
+                return callFactory({ source: key} , { cwd: cwd });
+            })
+            .then(function (resolver) {
+                expect(resolver).to.be.a(resolvers.Bo2);
+                expect(resolver.getTarget()).to.equal('*');
+            });
+
+            // Test with name
+            promise = promise.then(function () {
+                return callFactory({ name: 'foo', source: key}, { cwd: cwd });
+            })
+            .then(function (resolver) {
+                expect(resolver).to.be.a(resolvers.Bo2);
+                expect(resolver.getName()).to.equal('foo');
+                expect(resolver.getTarget()).to.equal('*');
+            });
+        });
+
+        promise
+            .then(next.bind(next, null))
+            .done();
+    });
+
     if (!helpers.hasSvn())
         describe.skip('should recognize svn remote endpoints correctly', function() {});
     else it('should recognize svn remote endpoints correctly', function (next) {
